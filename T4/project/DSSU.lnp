@@ -1,0 +1,24 @@
+--cpu Cortex-M3
+".\main.o"
+".\stimulation.o"
+".\stm32_init.o"
+".\stm32f10x_it.o"
+".\system.o"
+".\dac2526.o"
+".\stm32f10x_vector.o"
+".\cortexm3_macro.o"
+".\stm32f10x_can.o"
+".\stm32f10x_flash.o"
+".\stm32f10x_fsmc.o"
+".\stm32f10x_gpio.o"
+".\stm32f10x_lib.o"
+".\stm32f10x_nvic.o"
+".\stm32f10x_rcc.o"
+".\stm32f10x_spi.o"
+".\stm32f10x_tim.o"
+".\stm32f10x_usart.o"
+".\stm32f10x_systick.o"
+--strict --scatter ".\DSSU.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\DSSU.map" -o .\DSSU.axf

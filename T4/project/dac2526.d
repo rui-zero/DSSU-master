@@ -1,0 +1,17 @@
+.\dac2526.o: ..\src\DAC2526.c
+.\dac2526.o: ..\..\common\inc\stm32f10x_lib.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_map.h
+.\dac2526.o: ..\inc\stm32f10x_conf.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_type.h
+.\dac2526.o: ..\..\common\inc\cortexm3_macro.h
+.\dac2526.o: ..\inc\stm32f10x_can.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_flash.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_fsmc.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_gpio.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_nvic.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_rcc.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_spi.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_systick.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_tim.h
+.\dac2526.o: ..\..\common\inc\stm32f10x_usart.h
+.\dac2526.o: ..\inc\DAC2526.h

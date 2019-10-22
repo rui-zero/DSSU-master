@@ -1,0 +1,17 @@
+.\stm32_init.o: ..\src\STM32_Init.c
+.\stm32_init.o: ..\..\common\inc\stm32f10x_lib.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_map.h
+.\stm32_init.o: ..\inc\stm32f10x_conf.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_type.h
+.\stm32_init.o: ..\..\common\inc\cortexm3_macro.h
+.\stm32_init.o: ..\inc\stm32f10x_can.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_flash.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_fsmc.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_gpio.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_nvic.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_rcc.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_spi.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_systick.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_tim.h
+.\stm32_init.o: ..\..\common\inc\stm32f10x_usart.h
+.\stm32_init.o: ..\inc\STM32_Reg.h

@@ -1,0 +1,37 @@
+*** Creating Trace Output File 'DSSU.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"main.o"'
+### List of Objects: adding '"stimulation.o"'
+### List of Objects: adding '"stm32_init.o"'
+### List of Objects: adding '"stm32f10x_it.o"'
+### List of Objects: adding '"system.o"'
+### List of Objects: adding '"dac2526.o"'
+### List of Objects: adding '".\stm32f10x_vector.o"'
+### List of Objects: adding '".\cortexm3_macro.o"'
+### List of Objects: adding '"stm32f10x_can.o"'
+### List of Objects: adding '"stm32f10x_flash.o"'
+### List of Objects: adding '"stm32f10x_fsmc.o"'
+### List of Objects: adding '"stm32f10x_gpio.o"'
+### List of Objects: adding '"stm32f10x_lib.o"'
+### List of Objects: adding '"stm32f10x_nvic.o"'
+### List of Objects: adding '"stm32f10x_rcc.o"'
+### List of Objects: adding '"stm32f10x_spi.o"'
+### List of Objects: adding '"stm32f10x_tim.o"'
+### List of Objects: adding '"stm32f10x_usart.o"'
+### List of Objects: adding '"stm32f10x_systick.o"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 "main.o" "stimulation.o" "stm32_init.o" "stm32f10x_it.o" "system.o" "dac2526.o" ".\stm32f10x_vector.o" ".\cortexm3_macro.o" "stm32f10x_can.o" "stm32f10x_flash.o" "stm32f10x_fsmc.o" "stm32f10x_gpio.o" "stm32f10x_lib.o" "stm32f10x_nvic.o" "stm32f10x_rcc.o" "stm32f10x_spi.o" "stm32f10x_tim.o" "stm32f10x_usart.o" "stm32f10x_systick.o" --strict --scatter "DSSU.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\DSSU.map" -o "DSSU.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'DSSU.axf'
+### ADS-LD Command File: 'DSSU.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'DSSU.lnp', Handle=0x0000029C
+### Writing '.lnp' file
+### ADS-LD Command file 'DSSU.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.
