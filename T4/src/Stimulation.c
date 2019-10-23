@@ -138,70 +138,7 @@ void  Stimulation_Single(vu16 StimPosTime, vu16 StimNegTime, oneTrainStimType on
 }
 
 
-void  Stimulation_Single_2(vu16 StimPosTime, vu16 StimNegTime,  vu8 *pStimAmp,vu8 stimulation_delay)
-{
-
-   u8 stimAmp;
-	 //u8 flag;
  
-	 
-	 stimAmp = *pStimAmp;
-	 TIM_Cmd(TIM2, ENABLE);		//??TIM
-
-
-	 /*Positive Stimulation--time 100us------------------------------------------*/
-	 if(stimAmp == 0)
-	 {
-	 }
-	 else
-	 {	
-		       writeDACAandB(DACMap[10],DACMap[10]);
-		       //writeDACAandB(DACMap[stimAmp],DACMap[stimAmp]);
-		       //GPIO_SetBits(GPIOC, GPIO_Pin_5);
-		       //GPIO_SetBits(GPIOB, GPIO_Pin_0);//postive pulsen start
-		       GPIOB->BSRR = GPIO_Pin_0; 
-		       GPIOC->BSRR = GPIO_Pin_5;
-
-		      // writeDACAandB(DACMap[stimAmp],DACMap[stimAmp]);
-		       Delay(1);
-		      // GPIO_ResetBits(GPIOB, GPIO_Pin_0);
-		      // GPIO_ResetBits(GPIOC, GPIO_Pin_5);
-		       GPIOB->BRR = GPIO_Pin_0; 
-		       GPIOC->BRR = GPIO_Pin_5;
-		      	
-      writeDACAandB(DACMap[stimAmp],0x0);
-     	   
-		  //Delay(5);
-		     
-     	GPIO_SetBits(GPIOB, GPIO_Pin_0);//postive pulsen start
-		         
-		 
-    	Delay(StimPosTime-10);
-    	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
-    	writeDACAandBtoZero(); //delay bewteen pp and np
-    	//Delay(stimulation_delay);
-		  
-     	writeDACAandB(0x0, DACMap[stimAmp]);
-	       
-     // Delay(5);
-		     
-    	GPIO_SetBits(GPIOC, GPIO_Pin_5);
-		      
-    	Delay(StimNegTime-10);
-    	GPIO_ResetBits(GPIOC, GPIO_Pin_5); 
-		  Delay(50);
-    	writeDACAandBtoZero();
-	 }
-
-	// flag=1;
-	 
-	while(int_flag == 0);	 //????
-	int_flag = 0;
-	TIM_Cmd(TIM2, DISABLE);	//??TIM 	
-	 
-}
-
-
 /******************************************************************************
 * Function Name  : Stimulation
 * Description    : stimulation.
@@ -237,15 +174,22 @@ void stiumlationRun(u16 StimPosTime,u16 StimNegTime, u16 StimFreq,u16 Stimulatio
 		oneTrainStim.denominator = (vu16)(*stimulation_para++);
 		oneTrainStim.denominator <<= 8;
 		oneTrainStim.denominator = oneTrainStim.denominator + (vu16)(*stimulation_para++);		// 00 01
-		oneTrainStim.stimAmp = *stimulation_para++;											    // 03
+		oneTrainStim.stimAmp = *stimulation_para++;				// 03
+		
+		if(oneTrainStim.stimAmp>120)  oneTrainStim.stimAmp=30; // 2019.10.23  增加电流幅值限制
+		
 		if(stimulationStart==1)
 		{
 		   stimulationTrain(StimPosTime,StimNegTime,StimFreq,oneTrainStim,stimulation_delay);			 //????
 		}
-		else
-        {
-           break;
-        }
+		else if(SensoryFeedbackSystem==1)      //2019.10.23  感知反馈系统，电刺激 
+		      {  
+						 stimulationTrain(StimPosTime,StimNegTime,StimFreq,oneTrainStim,stimulation_delay);
+					}
+		       else
+           {
+              break;
+           }
 		StimulationNumber--;
 	}
 }

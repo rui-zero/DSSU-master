@@ -106,19 +106,23 @@ int main(void)
 			codeUpdata = 0;
 			break;
 		}
+		
+		 codeBuf=0;
 	}
 	
 	if ((dataUpdata == 1) && (reFlag == 0))
 	{
-			{
+			
 					stimulation_width = dataBuf[0];
 					stimulation_width <<=8;
 					stimulation_width =  stimulation_width + dataBuf[1];
-					if ((stimulation_width < 11) && (stimulation_width > 4000))
-					stimulation_width = 11;
+					if ((stimulation_width < 11) && (stimulation_width > 400))
+					  stimulation_width = 50;
+					
 					stimulation_Freq = dataBuf[2];
 					stimulation_Freq <<=8;
 					stimulation_Freq =  stimulation_Freq + dataBuf[3];
+					
 					stimulation_delay = dataBuf[4];  //延迟 rui  2019.10.14 添加注释
 					stimulation_para = &(dataBuf[6]);					      //这边什么鬼?40 00    00   00 01   03 // 刺激次数？
 					stimulation_para_Num = dataBuf[5];//(dataLenth - 6 )/6; //循环次数
@@ -129,12 +133,12 @@ int main(void)
 											if( stimulation_width >10  )	
 											{									
 												dataIsReady = 1;
-												dataUpdata = 0;
+											
 												if(SensoryFeedbackSystem==0) USART2_Putc(0x0029);
 											}
 						Delay(10);} }                        //表示读入数据有效，返回1字节29
 						
-			} 				
+					 dataUpdata = 0;			
 	}
 	
 	
@@ -152,25 +156,15 @@ int main(void)
 	
 	if( (SensoryFeedbackSystem == 1 )&&(SensoryFeedbackDataReady==1))    //  感知反馈跳过启动指令   2018.10.18
 	{
-		 
-		 vu8* CurrentApm = & SensoryFeedbackDataBuf[2];
-		
-		  stimulation_width = SensoryFeedbackDataBuf[0];
-			stimulation_width <<=8;
-			stimulation_width =  stimulation_width + SensoryFeedbackDataBuf[1];
-		 
-		  if((stimulation_width<11)||( stimulation_width>400))
-				 stimulation_width=50;  
-		   
-		 
-			if(SensoryFeedbackDataBuf[2]>120 ) SensoryFeedbackDataBuf[2]=50;
 			
 	   	Delay(10);
 			
-	   Stimulation_Single_2(stimulation_width, 
-			                    stimulation_width, 
-			                    CurrentApm,
-			                    stimulation_delay);
+			stiumlationRun( stimulation_width,   //正脉冲宽度
+		                   stimulation_width,   //负脉冲宽度度
+		                   stimulation_Freq,    //
+		                   stimulation_para_Num,
+		                   stimulation_para,
+		                   stimulation_delay     );
 
 
 		

@@ -794,7 +794,7 @@ void USART2_IRQHandler(void)
 		receiveDataFromCom.temp = USART_ReceiveData(USART2);
 		if ( receiveDataFromCom.startFlag == 0)
 		{
-			if ( receiveDataFromCom.temp == 0x80)				        //同步头80，说明开始传输
+			if    ( receiveDataFromCom.temp == 0x80)   				        //同步头80，说明开始传输
 			{
 				receiveDataFromCom.startFlag = 1;
 				receiveDataFromCom.dataTypeFlag = 0;
@@ -825,11 +825,13 @@ void USART2_IRQHandler(void)
 			else if(receiveDataFromCom.temp == 4 ) // 感知反馈系统传输的数据  2019.10.18
 			{
 			   SensoryFeedbackSystem=1;
+				 receiveDataFromCom.dataTypeFlag=1;
+				 reFlag=1;
 				 i=0;
 			}	
 			else 
 			{
-				receiveDataFromCom.startFlag = 0;
+			 	receiveDataFromCom.startFlag = 0;   
 				receiveDataFromCom.dataTypeFlag = 0;
 				
 			}
@@ -839,12 +841,14 @@ void USART2_IRQHandler(void)
 		}
 		
 
-		if((receiveDataFromCom.codeStartFlag == 1)&&(receiveDataFromCom.startFlag == 1))            //传命令
+	if((receiveDataFromCom.codeStartFlag == 1)&&(receiveDataFromCom.startFlag == 1))            //传命令
+		//if((receiveDataFromCom.codeStartFlag == 1)&&(receiveDataFromCom.dataTypeFlag == 1)) 	// 2019.10.23  
 		{
 			codeBuf = receiveDataFromCom.temp;
 			//MasterUnitState.codeUpdataFlag = 1;
 			codeUpdata=1;
 			receiveDataFromCom.startFlag = 0;
+			receiveDataFromCom.codeStartFlag = 0;
 			receiveDataFromCom.dataTypeFlag = 0;
 			if(codeBuf==2)
 			{     //codeBuf=2证明是80 01 02停止电刺激的命令
@@ -868,7 +872,8 @@ void USART2_IRQHandler(void)
 			return;
 		}
 
-		if ((receiveDataFromCom.stimulationChannelFlag == 1)&&(receiveDataFromCom.startFlag == 1))	   //传数据
+	 if ((receiveDataFromCom.stimulationChannelFlag == 1)&&(receiveDataFromCom.startFlag == 1))	   //传数据
+		//if ((receiveDataFromCom.stimulationChannelFlag == 1)&&(receiveDataFromCom.dataTypeFlag == 1))	 //2019.10.23
 		{
 			if ((receiveDataFromCom.temp==1)&&(datajixu==0))// <= 8 && receiveDataFromCom.temp >= 1)
 			{	
@@ -907,6 +912,9 @@ void USART2_IRQHandler(void)
 					   dataUpdata=1;
 					
 				receiveDataFromCom.startFlag = 0;
+			  receiveDataFromCom.stimulationChannelFlag =0 ; 	
+        receiveDataFromCom.dataTypeFlag=0;					
+					
 				USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 				return;}
 			
@@ -921,13 +929,14 @@ void USART2_IRQHandler(void)
       
 				if(i==2)
 				{
-//					  dataBuf[0]=SensoryFeedbackDataBuf[0];
-//					  dataBuf[1]=SensoryFeedbackDataBuf[1];
-//					  dataBuf[11]=SensoryFeedbackDataBuf[2];
-//				    dataUpdata=1;
-//				    reFlag=1;
+ 					  dataBuf[0]=SensoryFeedbackDataBuf[0];
+ 					  dataBuf[1]=SensoryFeedbackDataBuf[1];
+ 					  dataBuf[11]=SensoryFeedbackDataBuf[2];
+ 				    dataUpdata=1;
+ 				    reFlag=0;
 					  SensoryFeedbackDataReady=1;
-            i=0;					
+            i=0;
+            receiveDataFromCom.startFlag = 0;					
 				}
 				else
         {
