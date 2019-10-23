@@ -46,6 +46,8 @@ extern vu8 datajixu;
 extern ReceiveDataType receiveDataFromCom;
 
 extern vu8 SensoryFeedbackSystem;
+extern vu8 SensoryFeedbackDataBuf[3];
+extern vu8  SensoryFeedbackDataReady;
 //extern queueBufferType queueBuffer[8];
 
 /******************************************标志位********************************************/
@@ -823,6 +825,7 @@ void USART2_IRQHandler(void)
 			else if(receiveDataFromCom.temp == 4 ) // 感知反馈系统传输的数据  2019.10.18
 			{
 			   SensoryFeedbackSystem=1;
+				 i=0;
 			}	
 			else 
 			{
@@ -913,14 +916,26 @@ void USART2_IRQHandler(void)
 		
 			if(SensoryFeedbackSystem==1)
 			{
+			  
+				SensoryFeedbackDataBuf[i]= receiveDataFromCom.temp ;
+      
+				if(i==2)
+				{
+//					  dataBuf[0]=SensoryFeedbackDataBuf[0];
+//					  dataBuf[1]=SensoryFeedbackDataBuf[1];
+//					  dataBuf[11]=SensoryFeedbackDataBuf[2];
+//				    dataUpdata=1;
+//				    reFlag=1;
+					  SensoryFeedbackDataReady=1;
+            i=0;					
+				}
+				else
+        {
+				   i++;
+				}
+			
+		   
 				USART_ClearITPendingBit(USART2, USART_IT_RXNE);
-				dataBuf[0]= receiveDataFromCom.temp   ;
-				dataBuf[11]= receiveDataFromCom.temp;
-				
-				if(dataBuf[11]>120 )  dataBuf[11]=0;
-				
-				dataUpdata=1;
-				reFlag=1;
 				return;
 			}
 

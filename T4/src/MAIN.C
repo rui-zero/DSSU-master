@@ -24,6 +24,8 @@ vu16 dataLenth = 0;							//Êý¾ÝµÄ×Ü³¤¶È£¬¸ù¾ÝÍ¨ÐÅÐ­ÒéÓÐ(datalenth-6)/6Îª²»Í¬Ð±Â
 vu8 dataBuf[3072];							//0,1¹²16Î»ÎªÂö¿í£¬Ð¡ÓÚ10»ò´óÓÚ1000ÔòÊÓÎª10£»
                                             //2,3¹²16Î»ÎªÆµÂÊ
 											//6,7¹²16Î»Îª´Ì¼¤´ÎÊý£¬8Îª·Ö×Ó£¬9£¬10Îª·ÖÄ¸£¬11Îª´Ì¼¤·ù¶È£¬´Ë6B¹²48bÎªÒ»¶ÎµÄÊä³ö
+											
+											
 vu16 dataBufEnd = 0;
 vu8 codeBuf = 0;							//1±íÊ¾Á¬½ÓÇó·´À¡£¬2±íÊ¾¿ªÊ¼´Ì¼¤
 vu8 codeUpdata = 0;		                    //ÊÕµ½µÄ´úÂëÓÐ±ä»¯
@@ -45,6 +47,8 @@ vu8 datajixu=0;
 
 
 vu8 SensoryFeedbackSystem=0;   //¸ÐÖª·´À¡ÏµÍ³
+vu8 SensoryFeedbackDataReady=0;
+vu8 SensoryFeedbackDataBuf[3];
 /******************************************±êÖ¾Î»********************************************/
 
 
@@ -110,8 +114,8 @@ int main(void)
 					stimulation_width = dataBuf[0];
 					stimulation_width <<=8;
 					stimulation_width =  stimulation_width + dataBuf[1];
-					if ((stimulation_width < 10) && (stimulation_width > 1000))
-					stimulation_width = 10;
+					if ((stimulation_width < 11) && (stimulation_width > 4000))
+					stimulation_width = 11;
 					stimulation_Freq = dataBuf[2];
 					stimulation_Freq <<=8;
 					stimulation_Freq =  stimulation_Freq + dataBuf[3];
@@ -136,8 +140,8 @@ int main(void)
 	
 	if (( MUconnectFlag == 1)&&(stimulationStart == 1)&&(dataIsReady == 1))
 	{   
-			Delay(10);
-		stiumlationRun( stimulation_width,   //ÕýÂö³å¿í¶È
+		 Delay(10);
+		 stiumlationRun( stimulation_width,   //ÕýÂö³å¿í¶È
 		                stimulation_width,   //¸ºÂö³å¿í¶È¶È
 		                stimulation_Freq,    //
 		                stimulation_para_Num,
@@ -146,17 +150,32 @@ int main(void)
 		stimulationStart=0;	
 	}
 	
-	if( (SensoryFeedbackSystem == 1 )&&(dataIsReady==1))    //  ¸ÐÖª·´À¡Ìø¹ýÆô¶¯Ö¸Áî   2018.10.18
+	if( (SensoryFeedbackSystem == 1 )&&(SensoryFeedbackDataReady==1))    //  ¸ÐÖª·´À¡Ìø¹ýÆô¶¯Ö¸Áî   2018.10.18
 	{
-	   			Delay(10);
-		  stiumlationRun( stimulation_width,   //ÕýÂö³å¿í¶È
-		                  stimulation_width,   //¸ºÂö³å¿í¶È¶È
-		                  stimulation_Freq,    //
-		                  stimulation_para_Num,
-		                  stimulation_para,
-		                  stimulation_delay     );
+		 
+		 vu8* CurrentApm = & SensoryFeedbackDataBuf[2];
+		
+		  stimulation_width = SensoryFeedbackDataBuf[0];
+			stimulation_width <<=8;
+			stimulation_width =  stimulation_width + SensoryFeedbackDataBuf[1];
+		 
+		  if((stimulation_width<11)||( stimulation_width>400))
+				 stimulation_width=50;  
+		   
+		 
+			if(SensoryFeedbackDataBuf[2]>120 ) SensoryFeedbackDataBuf[2]=50;
+			
+	   	Delay(10);
+			
+	   Stimulation_Single_2(stimulation_width, 
+			                    stimulation_width, 
+			                    CurrentApm,
+			                    stimulation_delay);
+
+
 		
 	   SensoryFeedbackSystem=0;
+		 SensoryFeedbackDataReady=0;
 	}		
 
 	if(dataReErr == 1)

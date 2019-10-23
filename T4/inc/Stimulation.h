@@ -30,7 +30,7 @@ typedef struct
 
 
 /* Private functions ---------------------------------------------------------*/
-
+void  Stimulation_Single_2(vu16 StimPosTime, vu16 StimNegTime,vu8 *pStimAmp,vu8 stimulation_delay);
 void  Stimulation_Single(vu16 StimPosTime, vu16 StimNegTime, oneTrainStimType oneTrainStim,u8 *pStimAmp,vu8 stimulation_delay);
 void stiumlationRun(u16 StimPosTime,u16 StimNegTime,u16 StimulationNumber, u16 StimFreq, vu8* paraBuf,vu8 stimulation_delay);
 void stimulationTrain(u16 StimPosTime,u16 StimNegTime,u16 StimFreq,oneTrainStimType oneTrainStim,vu8 stimulation_delay);
