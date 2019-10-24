@@ -46,8 +46,77 @@ vuc16 DACMap[121] = {0x0    , 0x04   , 0x08   , 0x0C   , 0x10   , 0x14   , 0x18 
 					 0x168  , 0x16C  , 0x170  , 0x174  , 0x178  , 0x17C  , 0x180  , 0x184  , 0x188  , 0x18C  , 0x190,
            0x194  , 0x198  , 0x19C  , 0x1A0  , 0x1A4  , 0x1A8  , 0x1AC  , 0x1B0  , 0x1B4  , 0x1B8  , 
 	         0x1BC  , 0x1C0  , 0x1C4  , 0x1C8  , 0x1CC  , 0x1D0  , 0x1D4  , 0x1D8  , 0x1DC  , 0x1E0  };
- 
-					   
+
+/**************************************************************************
+函数功能：产生一个正负脉冲电刺激
+					 
+					 
+**********************************************************************/
+					 
+void Stimulation_SingleSFS(vu16  StimPosTime, vu16  StimNegTime, vu8 *pStimAmp,vu8 stimulation_delay)
+{
+   u8 stimAmp;
+	
+	 stimAmp = *pStimAmp;
+	 TIM_Cmd(TIM2, ENABLE);		//??TIM
+
+
+	 /*Positive Stimulation--time 100us------------------------------------------*/
+	 if(stimAmp == 0)
+	 {
+	 }
+	 else
+	 {	
+		       writeDACAandB(DACMap[10],DACMap[10]);
+		       //writeDACAandB(DACMap[stimAmp],DACMap[stimAmp]);
+		       //GPIO_SetBits(GPIOC, GPIO_Pin_5);
+		       //GPIO_SetBits(GPIOB, GPIO_Pin_0);//postive pulsen start
+		       GPIOB->BSRR = GPIO_Pin_0; 
+		       GPIOC->BSRR = GPIO_Pin_5;
+
+		      // writeDACAandB(DACMap[stimAmp],DACMap[stimAmp]);
+		       Delay(1);
+		      // GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+		      // GPIO_ResetBits(GPIOC, GPIO_Pin_5);
+		       GPIOB->BRR = GPIO_Pin_0; 
+		       GPIOC->BRR = GPIO_Pin_5;
+		      	
+      writeDACAandB(DACMap[stimAmp],0x0);
+     	   
+		  //Delay(5);
+		     
+     	GPIO_SetBits(GPIOB, GPIO_Pin_0);//postive pulsen start
+		         
+		 
+    	Delay(StimPosTime-10);
+    	GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+    	writeDACAandBtoZero(); //delay bewteen pp and np
+    	//Delay(stimulation_delay);
+		  
+     	writeDACAandB(0x0, DACMap[stimAmp]);
+	       
+     // Delay(5);
+		     
+    	GPIO_SetBits(GPIOC, GPIO_Pin_5);
+		      
+    	Delay(StimNegTime-10);
+    	GPIO_ResetBits(GPIOC, GPIO_Pin_5); 
+		  Delay(50);
+    	writeDACAandBtoZero();
+	 }
+
+    
+
+	Delay(10);
+	 
+	while(int_flag == 0);	  
+	int_flag = 0;
+	TIM_Cmd(TIM2, DISABLE);	 
+
+}					 
+					 
+
+					 
 /*******************************************************************************
 * Function Name  : Stimulation_Single
 * Description    : stimulate one pulse
@@ -182,14 +251,10 @@ void stiumlationRun(u16 StimPosTime,u16 StimNegTime, u16 StimFreq,u16 Stimulatio
 		{
 		   stimulationTrain(StimPosTime,StimNegTime,StimFreq,oneTrainStim,stimulation_delay);			 //????
 		}
-		else if(SensoryFeedbackSystem==1)      //2019.10.23  感知反馈系统，电刺激 
-		      {  
-						 stimulationTrain(StimPosTime,StimNegTime,StimFreq,oneTrainStim,stimulation_delay);
-					}
-		       else
-           {
-              break;
-           }
+		else
+       {
+           break;
+       }
 		StimulationNumber--;
 	}
 }
@@ -217,26 +282,24 @@ void stimulationTrain(u16 StimPosTime,u16 StimNegTime,u16 StimFreq,oneTrainStimT
 	pStimAmp = &stimAmp;
 	*pStimAmp = oneTrainStim.stimAmp;
 
- if(SensoryFeedbackSystem == 0)    	// 感知反馈系统不用应答
+ 
  { USART2_Putc(0x00AA);     }           
 	while(oneTrainStim.stimNumber)
 	{
       	if(stimulationStart==1)
      	{
 		    Stimulation_Single(StimPosTime, StimNegTime, oneTrainStim,pStimAmp,stimulation_delay);
-				//printf("ddd\n");
-				//printf("%c\n",*pStimAmp);
-		}
-		else
+		  }
+		  else
 	    {
 	     	break;
 	    }
-		oneTrainStim.stimNumber=oneTrainStim.stimNumber-1;
+		  oneTrainStim.stimNumber=oneTrainStim.stimNumber-1;
 	}
 	 fraction_index  = 0;				   
    fraction_index2 = 0;
 
- if(SensoryFeedbackSystem == 0)    	// 感知反馈系统不用应答	
+ 
 	USART2_Putc(0x00BB);                //??????
 }
 

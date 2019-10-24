@@ -110,6 +110,7 @@ int main(void)
 		 codeBuf=0;
 	}
 	
+	
 	if ((dataUpdata == 1) && (reFlag == 0))
 	{
 			
@@ -134,7 +135,8 @@ int main(void)
 											{									
 												dataIsReady = 1;
 											
-												if(SensoryFeedbackSystem==0) USART2_Putc(0x0029);
+										  
+												 USART2_Putc(0x0029);
 											}
 						Delay(10);} }                        //表示读入数据有效，返回1字节29
 						
@@ -154,22 +156,36 @@ int main(void)
 		stimulationStart=0;	
 	}
 	
-	if( (SensoryFeedbackSystem == 1 )&&(SensoryFeedbackDataReady==1))    //  感知反馈跳过启动指令   2018.10.18
+	if(SensoryFeedbackSystem == 1 )     //  感知反馈跳过启动指令   2019.10.24
 	{
-			
-	   	Delay(10);
-			
-			stiumlationRun( stimulation_width,   //正脉冲宽度
-		                   stimulation_width,   //负脉冲宽度度
-		                   stimulation_Freq,    //
-		                   stimulation_para_Num,
-		                   stimulation_para,
-		                   stimulation_delay     );
-
-
+		static u16 Frequncy=0;
 		
-	   SensoryFeedbackSystem=0;
-		 SensoryFeedbackDataReady=0;
+		if(Frequncy!=stimulation_Freq    ) //频率改变才需要配置定时器   2019.10.24 添加
+	  {
+	       Frequncy=stimulation_Freq;
+		     TIM_Configuration(stimulation_Freq);
+	  }
+		
+    while(SensoryFeedbackSystem)
+		{ 
+			   if(SensoryFeedbackDataReady)
+         {
+				    stimulation_width = dataBuf[0];
+				  	stimulation_width <<=8;
+					  stimulation_width =  stimulation_width + dataBuf[1];
+					  if ((stimulation_width < 11) && (stimulation_width > 400))
+					  stimulation_width = 11;
+						
+						SensoryFeedbackDataReady=0;
+				 }
+			
+			
+	        Stimulation_SingleSFS( stimulation_width, 
+		                             stimulation_width, 
+		                             &dataBuf[11],
+		                             stimulation_delay );
+		}
+
 	}		
 
 	if(dataReErr == 1)
