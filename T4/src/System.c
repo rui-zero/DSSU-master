@@ -33,7 +33,7 @@
 
 
 /**************************系统初始化所需变量******************/
-vu32 TimingDelay = 0; 
+int TimingDelay = 0; 
 
 extern void usart1(void);
 
@@ -492,10 +492,10 @@ void Delay(u32 nCount)
   /* Enable the SysTick Counter */
   SysTick_CounterCmd(SysTick_Counter_Enable);
   
-  while(TimingDelay != 0)
+  while(TimingDelay >0)
   {
+		
   }
-
   /* Disable the SysTick Counter */
   SysTick_CounterCmd(SysTick_Counter_Disable);
 

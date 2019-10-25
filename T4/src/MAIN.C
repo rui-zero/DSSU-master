@@ -117,7 +117,7 @@ int main(void)
 					stimulation_width = dataBuf[0];
 					stimulation_width <<=8;
 					stimulation_width =  stimulation_width + dataBuf[1];
-					if ((stimulation_width < 11) && (stimulation_width > 400))
+					if ((stimulation_width < 11) || (stimulation_width > 400))
 					  stimulation_width = 50;
 					
 					stimulation_Freq = dataBuf[2];
@@ -173,7 +173,7 @@ int main(void)
 				    stimulation_width = dataBuf[0];
 				  	stimulation_width <<=8;
 					  stimulation_width =  stimulation_width + dataBuf[1];
-					  if ((stimulation_width < 11) && (stimulation_width > 400))
+					  if ((stimulation_width < 11) || (stimulation_width > 400))
 					  stimulation_width = 11;
 						
 						SensoryFeedbackDataReady=0;

@@ -788,7 +788,7 @@ void USART1_IRQHandler(void)
 *******************************************************************************/
 void USART2_IRQHandler(void)
 {	   	
-	extern vu32 TimingDelay; 
+	extern int TimingDelay; 
 	if(USART_GetFlagStatus(USART2,USART_IT_RXNE)==SET)
 	{	
 		receiveDataFromCom.temp = USART_ReceiveData(USART2);
