@@ -129,8 +129,8 @@ int main(void)
 					stimulation_para_Num = dataBuf[5];//(dataLenth - 6 )/6; //循环次数
 					
 					stimulation_widthMax=1000000/stimulation_Freq/2 - 50;  // 计算脉宽的最大值		
-					if ((stimulation_width < 11) || (stimulation_widthMax> 400)) //检查脉宽是否超过最大值
-					  stimulation_width = 50;
+					if ((stimulation_width < 11) || (stimulation_width>stimulation_widthMax)) //检查脉宽是否超过最大值
+					     stimulation_width = 50;
 					
 					if((stimulation_Freq>=10)&&(stimulation_Freq<=1000)&&(dataBuf[4]<=0xFF))
 					{ if((dataBuf[11]<=255)&&(dataBuf[12]==0xFF)&&(dataBuf[13]==0xFF)&&(dataBuf[14]==0xFF))			//取消120	限制，改成255								
@@ -158,9 +158,6 @@ int main(void)
 		                stimulation_para_Num,
 		                stimulation_para,
 		                stimulation_delay     );
-
-		
-		
 		stimulationStart=0;	
 	}
 	
@@ -181,6 +178,7 @@ int main(void)
 				    stimulation_width = dataBuf[0];
 				  	stimulation_width <<=8;
 					  stimulation_width =  stimulation_width + dataBuf[1];
+					
 					  if ((stimulation_width < 11) || (stimulation_width > stimulation_widthMax)) //检查脉宽是否超过最大值
 					  stimulation_width = 11;
 						
