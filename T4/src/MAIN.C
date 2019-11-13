@@ -49,6 +49,7 @@ vu8 datajixu=0;
 vu8 SensoryFeedbackSystem=0;   //感知反馈系统
 vu8 SensoryFeedbackDataReady=0;
 vu8 SensoryFeedbackDataBuf[3];
+u16 stimulation_widthMax=0;  //脉宽最大值， 不可超过的值
 /******************************************标志位********************************************/
 
 
@@ -117,8 +118,7 @@ int main(void)
 					stimulation_width = dataBuf[0];
 					stimulation_width <<=8;
 					stimulation_width =  stimulation_width + dataBuf[1];
-					if ((stimulation_width < 11) || (stimulation_width > 400))
-					  stimulation_width = 50;
+
 					
 					stimulation_Freq = dataBuf[2];
 					stimulation_Freq <<=8;
@@ -127,8 +127,13 @@ int main(void)
 					stimulation_delay = dataBuf[4];  //延迟 rui  2019.10.14 添加注释
 					stimulation_para = &(dataBuf[6]);					      //这边什么鬼?40 00    00   00 01   03 // 刺激次数？
 					stimulation_para_Num = dataBuf[5];//(dataLenth - 6 )/6; //循环次数
+					
+					stimulation_widthMax=1000000/stimulation_Freq/2 - 50;  // 计算脉宽的最大值		
+					if ((stimulation_width < 11) || (stimulation_widthMax> 400)) //检查脉宽是否超过最大值
+					  stimulation_width = 50;
+					
 					if((stimulation_Freq>=10)&&(stimulation_Freq<=1000)&&(dataBuf[4]<=0xFF))
-						{ if((dataBuf[11]<=255)&&(dataBuf[12]==0xFF)&&(dataBuf[13]==0xFF)&&(dataBuf[14]==0xFF))			//取消120	限制，改成255								
+					{ if((dataBuf[11]<=255)&&(dataBuf[12]==0xFF)&&(dataBuf[13]==0xFF)&&(dataBuf[14]==0xFF))			//取消120	限制，改成255								
 							 //	00 28 00 0A 0A 01 40 00 00 00 01 03 FF FF FF
 										{ 
 											if( stimulation_width >10  )	
@@ -138,9 +143,9 @@ int main(void)
 										  
 												 USART2_Putc(0x0029);
 											}
-						Delay(10);} }                        //表示读入数据有效，返回1字节29
+					Delay(10);} }                        //表示读入数据有效，返回1字节29
 						
-					 dataUpdata = 0;			
+					dataUpdata = 0;			
 	}
 	
 	
@@ -173,27 +178,27 @@ int main(void)
 				    stimulation_width = dataBuf[0];
 				  	stimulation_width <<=8;
 					  stimulation_width =  stimulation_width + dataBuf[1];
-					  if ((stimulation_width < 11) || (stimulation_width > 400))
+					  if ((stimulation_width < 11) || (stimulation_width > stimulation_widthMax)) //检查脉宽是否超过最大值
 					  stimulation_width = 11;
 						
 						SensoryFeedbackDataReady=0;
 				 }
 			
-			
+		
 	        Stimulation_SingleSFS( stimulation_width, 
 		                             stimulation_width, 
-		                             &dataBuf[11],
+		                             &dataBuf[11],         //电流幅值
 		                             stimulation_delay );
 		}
-
 	}		
 
 	if(dataReErr == 1)
 	{
 		dataReErr = 0;	
 	}
+	
   stimulationStart = 0; 	}
-   
+	
 }
 
 
