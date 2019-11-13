@@ -158,6 +158,9 @@ int main(void)
 		                stimulation_para_Num,
 		                stimulation_para,
 		                stimulation_delay     );
+
+		
+		
 		stimulationStart=0;	
 	}
 	
